@@ -54,7 +54,10 @@ frontend = subprocess.Popen(
         "-m",
         "streamlit",
         "run",
-        frontend_file
+        frontend_file,
+        "--server.port=8501",
+        "--server.address=0.0.0.0",
+        "--server.headless=true"
     ],
     cwd=BASE_DIR
 )

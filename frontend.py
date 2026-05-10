@@ -11,7 +11,7 @@ st.set_page_config(
     layout="wide"
 )
 
-API = "http://127.0.0.1:5000"
+API = "https://babumosai.onrender.com"
 
 # =========================
 # IMAGE PATHS
@@ -188,57 +188,62 @@ if st.session_state.started:
 
     if st.button("✅ SUBMIT GUESS"):
 
-        res = requests.post(
-            f"{API}/guess",
-            json={
-                "chor": chor_guess,
-                "dakat": dakat_guess
-            }
-        ).json()
+        try:
 
-        st.session_state.scores = res["scores"]
-        st.session_state.history = res["history"]
-        st.session_state.game_over = res["game_over"]
+            res = requests.post(
+                f"{API}/guess",
+                json={
+                    "chor": chor_guess,
+                    "dakat": dakat_guess
+                }
+            ).json()
 
-        # =========================
-        # FINAL REVEAL
-        # =========================
+            st.session_state.scores = res["scores"]
+            st.session_state.history = res["history"]
+            st.session_state.game_over = res["game_over"]
 
-        st.markdown("""
-        <h1 style='color:#FFD700; text-align:center; margin-top:30px;'>
-        🃏 FINAL REVEAL
-        </h1>
-        """, unsafe_allow_html=True)
+            # =========================
+            # FINAL REVEAL
+            # =========================
 
-        cols = st.columns(4)
+            st.markdown("""
+            <h1 style='color:#FFD700; text-align:center; margin-top:30px;'>
+            🃏 FINAL REVEAL
+            </h1>
+            """, unsafe_allow_html=True)
 
-        for i, (player, role) in enumerate(st.session_state.roles.items()):
+            cols = st.columns(4)
 
-            with cols[i]:
+            for i, (player, role) in enumerate(st.session_state.roles.items()):
 
-                st.markdown(f"""
-                <h2 style='text-align:center;'>{player}</h2>
-                """, unsafe_allow_html=True)
+                with cols[i]:
 
-                st.image(cards[role], use_container_width=True)
+                    st.markdown(f"""
+                    <h2 style='text-align:center;'>{player}</h2>
+                    """, unsafe_allow_html=True)
 
-                if role == "BABU":
-                    st.success("👑 BABU")
-                elif role == "POLICE":
-                    st.info("🚓 POLICE")
-                elif role == "CHOR":
-                    st.warning("🕵️ CHOR")
-                elif role == "DAKAT":
-                    st.error("😈 DAKAT")
+                    st.image(cards[role], use_container_width=True)
 
-        # =========================
-        # RESULT
-        # =========================
+                    if role == "BABU":
+                        st.success("👑 BABU")
+                    elif role == "POLICE":
+                        st.info("🚓 POLICE")
+                    elif role == "CHOR":
+                        st.warning("🕵️ CHOR")
+                    elif role == "DAKAT":
+                        st.error("😈 DAKAT")
 
-        if res["result"] == "correct":
-            st.success("🚓 Police guessed correctly!")
-        else:
-            st.error("❌ Wrong Guess!")
+            # =========================
+            # RESULT
+            # =========================
+
+            if res["result"] == "correct":
+                st.success("🚓 Police guessed correctly! +500 pts")
+            else:
+                st.error("❌ Wrong Guess! CHOR +400, DAKAT +600")
+
+        except Exception as e:
+            st.error(f"❌ Error submitting guess: {e}")
 
 # =========================
 # GRAND LEADERBOARD
