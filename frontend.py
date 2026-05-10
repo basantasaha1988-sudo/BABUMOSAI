@@ -11,7 +11,7 @@ st.set_page_config(
     layout="wide"
 )
 
-API = "http://localhost:5000"
+API = "https://babumosai-backend.onrender.com"
 
 # =========================
 # IMAGE PATHS
