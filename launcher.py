@@ -30,7 +30,7 @@ frontend_file = os.path.join(
 )
 
 # --------------------------------
-# START BACKEND
+# START BACKEND (always port 5000)
 # --------------------------------
 backend = subprocess.Popen(
     [
@@ -46,8 +46,10 @@ print("✅ Backend Started")
 time.sleep(3)
 
 # --------------------------------
-# START FRONTEND
+# START FRONTEND (reads Render PORT)
 # --------------------------------
+port = os.environ.get("PORT", "8501")
+
 frontend = subprocess.Popen(
     [
         "python",
@@ -55,7 +57,7 @@ frontend = subprocess.Popen(
         "streamlit",
         "run",
         frontend_file,
-        "--server.port=8501",
+        f"--server.port={port}",
         "--server.address=0.0.0.0",
         "--server.headless=true"
     ],
